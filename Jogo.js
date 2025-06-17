@@ -15,7 +15,7 @@ import {
   Quarto,
   Biblioteca,
   Sotao,
-} from "./salasOtto.js";
+} from "./Salas.js";
 
 export class JogoOtto extends Engine {
   #horaAtual;

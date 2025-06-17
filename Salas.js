@@ -10,7 +10,7 @@ import {
   Relogio,
   ChavePisoSecreto,
   Pilhas,
-} from "./ferramentasOtto.js";
+} from "./Ferramentas.js";
 import {
   PedacoTerra,
   CarroGaragem,
@@ -26,7 +26,7 @@ import {
   PortaBiblioteca,
   PortaoFundos,
   PortaoGaragem,
-} from "./objetosOtto.js";
+} from "./Objetos.js";
 
 export class Jardim extends Sala {
   constructor(engine) {

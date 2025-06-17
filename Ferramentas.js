@@ -1,7 +1,7 @@
 // Arquivo: ferramentasOtto.js
 // Ferramentas específicas do jogo do Otto
 
-import { Ferramenta } from "./Basicas";
+import { Ferramenta } from "./Basicas.js";
 
 export class Pa extends Ferramenta {
   constructor() {

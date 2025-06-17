@@ -2,14 +2,14 @@
 // Objetos específicos do jogo do Otto
 
 import { Objeto } from "./Basicas.js";
-import { validate } from "./Basicas.js";
+import { validate } from "bycontract";
 import {
   Pa,
   ControleRemoto,
   ChaveCasa,
   PeDeCabra,
   ChavePisoSecreto,
-} from "./ferramentasOtto.js";
+} from "./Ferramentas.js";
 
 export class PedacoTerra extends Objeto {
   constructor() {
