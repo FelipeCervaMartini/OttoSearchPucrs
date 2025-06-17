@@ -1,7 +1,7 @@
 // Arquivo: JogoOtto.js
 // Classe principal do jogo do investigador Otto
 
-import { Engine } from "./Basicas.js";
+import { Engine, prompt } from "./Basicas.js";
 import {
   Jardim,
   HallInferior,

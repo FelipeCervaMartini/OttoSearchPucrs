@@ -3,7 +3,7 @@
 
 import { validate } from "bycontract";
 import promptsync from "prompt-sync";
-const prompt = promptsync({ sigint: true });
+export const prompt = promptsync({ sigint: true });
 
 // ---------------------------------------------
 export class Ferramenta {
