@@ -1,7 +1,7 @@
 // Arquivo: salasOtto.js
 // Salas específicas do jogo do Otto
 
-import { Sala } from "./basicas.js";
+import { Sala } from "./Basicas.js";
 import {
   Pa,
   ControleRemoto,

@@ -1,6 +1,10 @@
+// Arquivo: Basicas.js
+// Classes básicas para o jogo de aventura do investigador Otto
+
 import { validate } from "bycontract";
 import promptsync from "prompt-sync";
 const prompt = promptsync({ sigint: true });
+
 // ---------------------------------------------
 export class Ferramenta {
   #nome;
@@ -19,6 +23,7 @@ export class Ferramenta {
   }
 }
 
+// ---------------------------------------------
 export class Mochila {
   #ferramentas;
 
@@ -43,6 +48,9 @@ export class Mochila {
   }
 
   inventario() {
+    if (this.#ferramentas.length === 0) {
+      return "Nenhuma ferramenta";
+    }
     return this.#ferramentas.map((obj) => obj.nome).join(", ");
   }
 }
@@ -83,8 +91,12 @@ export class Objeto {
     }
   }
 
-  usa(ferramenta, objeto) {}
+  usa(ferramenta, objeto) {
+    // Método base - deve ser sobrescrito nas classes filhas
+    return false; // ver se isso precisa mesmo
+  }
 }
+
 // ---------------------------------------------
 export class Sala {
   #nome;
@@ -124,7 +136,7 @@ export class Sala {
 
   objetosDisponiveis() {
     let arrObjs = [...this.#objetos.values()];
-    return arrObjs.map((obj) => obj.nome + ":" + obj.descricao);
+    return arrObjs.map((obj) => obj.nome + ": " + obj.descricao);
   }
 
   ferramentasDisponiveis() {
@@ -155,27 +167,33 @@ export class Sala {
   }
 
   textoDescricao() {
-    let descricao = "Você está no " + this.nome + "\n";
+    let descricao = "Você está no(a) " + this.nome + "\n";
+
     if (this.objetos.size == 0) {
-      descricao += "Não há objetos na sala\n";
+      descricao += "Não há objetos visíveis na sala\n";
     } else {
-      descricao += "Objetos: " + this.objetosDisponiveis() + "\n";
+      descricao += "Objetos: " + this.objetosDisponiveis().join(", ") + "\n";
     }
+
     if (this.ferramentas.size == 0) {
       descricao += "Não há ferramentas na sala\n";
     } else {
-      descricao += "Ferramentas: " + this.ferramentasDisponiveis() + "\n";
+      descricao +=
+        "Ferramentas: " + this.ferramentasDisponiveis().join(", ") + "\n";
     }
-    descricao += "Portas: " + this.portasDisponiveis() + "\n";
+
+    descricao += "Saídas: " + this.portasDisponiveis().join(", ") + "\n";
     return descricao;
   }
 
   usa(ferramenta, objeto) {
+    // Método base - deve ser sobrescrito nas classes filhas
     return false;
   }
 }
+
 // ---------------------------------------------
-//Exemplo de como pode ser a classe de controle do jogo
+// Classe Engine - base para controle do jogo
 // ---------------------------------------------
 export class Engine {
   #mochila;
@@ -202,13 +220,24 @@ export class Engine {
     this.#salaCorrente = sala;
   }
 
+  get fim() {
+    return this.#fim;
+  }
+
+  set fim(valor) {
+    validate(valor, "Boolean");
+    this.#fim = valor;
+  } //verificar se precisa mesmo
+
   indicaFimDeJogo() {
     this.#fim = true;
   }
 
   // Para criar um jogo deriva-se uma classe a partir de
   // Engine e se sobrescreve o método "criaCenario"
-  criaCenario() {}
+  criaCenario() {
+    // Método base - deve ser sobrescrito na classe filha
+  }
 
   // Para poder acionar o método "joga" deve-se garantir que
   // o método "criaCenario" foi acionado antes
@@ -216,15 +245,18 @@ export class Engine {
     let novaSala = null;
     let acao = "";
     let tokens = null;
+
     while (!this.#fim) {
       console.log("-------------------------");
       console.log(this.salaCorrente.textoDescricao());
-      acao = prompt("O que voce deseja fazer? ");
+      acao = prompt("O que você deseja fazer? ");
       tokens = acao.split(" ");
+
       switch (tokens[0]) {
         case "fim":
           this.#fim = true;
           break;
+
         case "pega":
           if (this.salaCorrente.pega(tokens[1])) {
             console.log("Ok! " + tokens[1] + " guardado!");
@@ -232,41 +264,54 @@ export class Engine {
             console.log("Objeto " + tokens[1] + " não encontrado.");
           }
           break;
+
         case "inventario":
-          console.log(
-            "Ferramentas disponiveis para serem usadas: " +
-              this.#mochila.inventario()
-          );
+          console.log("Ferramentas disponíveis: " + this.#mochila.inventario());
           break;
+
         case "usa":
-          if (this.salaCorrente.usa(tokens[1], tokens[2])) {
-            console.log("Feito !!");
-            if (this.#fim == true) {
-              console.log("Parabens, voce venceu!");
+          if (tokens.length >= 3) {
+            //veririficar oq é isso
+            if (this.salaCorrente.usa(tokens[1], tokens[2])) {
+              console.log("Feito!");
+              if (this.#fim == true) {
+                console.log("Parabéns, você venceu!");
+              }
+            } else {
+              console.log(
+                "Não é possível usar " +
+                  tokens[1] +
+                  " sobre " +
+                  tokens[2] +
+                  " nesta sala"
+              );
             }
-          } else {
-            console.log(
-              "Não é possível usar " +
-                tokens[1] +
-                "sobre" +
-                tokens[2] +
-                " nesta sala"
-            );
+          } else if (tokens.length === 2) {
+            // Comando "usa objeto" sem ferramenta
+            if (this.salaCorrente.usa("", tokens[1])) {
+              console.log("Feito!");
+            } else {
+              console.log("Não é possível interagir com " + tokens[1]);
+            } //verificar esse trecho
           }
           break;
+
         case "sai":
           novaSala = this.salaCorrente.sai(tokens[1]);
           if (novaSala == null) {
-            console.log("Sala desconhecida ...");
+            console.log("Sala desconhecida...");
           } else {
             this.#salaCorrente = novaSala;
           }
           break;
+
         default:
           console.log("Comando desconhecido: " + tokens[0]);
+          console.log("Comandos disponíveis: pega, usa, sai, inventario, fim");
           break;
       }
     }
+
     console.log("Jogo encerrado!");
   }
 }
