@@ -331,8 +331,10 @@ export class JogoOtto extends Engine {
           }
           break;
         case "remove":
-          if (this.mochila.remove(tokens[1])) {
-            console.log(tokens[1] + " descartado da mochila.");
+          const itemRemovido = this.mochila.pega(tokens[1]);
+          if (itemRemovido && this.mochila.remove(tokens[1])) {
+            this.salaCorrente.ferramentas.set(itemRemovido.nome, itemRemovido);
+            console.log(tokens[1] + " descartado no chão da sala.");
             this.avancaTempo(5);
           } else {
             console.log("Você não tem " + tokens[1] + " na mochila.");
