@@ -261,18 +261,41 @@ export class JogoOtto extends Engine {
           break;
 
         case "sai":
+          const bloqueios = {
+            Sala_de_Estar: {
+              objeto: "porta_sala_estar",
+              mensagem:
+                "A porta da sala de estar está trancada. Talvez uma chave ajude.",
+            },
+            Biblioteca: {
+              objeto: "porta_biblioteca",
+              mensagem:
+                "A porta da biblioteca está emperrada. Precisa ser forçada.",
+            },
+            Sotao: {
+              objeto: "porta_sotao",
+              mensagem:
+                "A porta do sótão está trancada. Você precisa da chave certa.",
+            },
+            Garagem: {
+              objeto: "portao_garagem",
+              mensagem: "portao trancado",
+            },
+          };
+
           novaSala = this.salaCorrente.sai(tokens[1]);
+
+          const bloqueio = bloqueios[novaSala?.nome];
+          if (bloqueio) {
+            const obj = this.salaCorrente.objetos.get(bloqueio.objeto);
+            if (obj && !obj.acaoOk) {
+              console.log(bloqueio.mensagem);
+              break;
+            }
+          }
+
           if (novaSala == null) {
             console.log("Sala desconhecida...");
-          }
-          if (tokens[1] === "Sala_de_Estar") {
-            const chave = this.salaCorrente.pega("ChaveCasa");
-            if (!chave || !chave.acaoOk) {
-              console.log(
-                "A porta da sala esta trancada. Você precisa usar a chave primeiro!"
-              );
-              break; // bloqueia entrada
-            }
           } else {
             this.salaCorrente = novaSala;
             this.avancaTempo(5); // Mudar de sala leva 5 minutos
