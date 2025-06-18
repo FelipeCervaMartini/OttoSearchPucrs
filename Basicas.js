@@ -27,7 +27,7 @@ export class Ferramenta {
 export class Mochila {
   #ferramentas;
   #limite;
-  constructor(limite = 5) {
+  constructor(limite = 4) {
     this.#ferramentas = [];
     this.#limite = limite;
   }

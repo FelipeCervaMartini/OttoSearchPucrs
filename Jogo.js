@@ -29,7 +29,6 @@ export class JogoOtto extends Engine {
     this.#nivelCansaco = 0; // Começa sem cansaço (0-100)
     this.#jogoTerminado = false;
     this.#motivoTermino = "";
-    this.mochila = new Mochila(5);
   }
 
   get horaAtual() {
