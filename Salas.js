@@ -38,18 +38,27 @@ export class Jardim extends Sala {
 
   usa(nomeFerramenta, nomeObjeto) {
     validate(arguments, ["String", "String"]);
+
     if (nomeObjeto === "pedaco_terra") {
       let ferramenta = this.engine.mochila.pega(nomeFerramenta);
       let objeto = this.objetos.get("pedaco_terra");
 
       if (ferramenta && objeto && objeto.usar(ferramenta)) {
         if (!objeto.acaoOk) return false;
-        // Adiciona a chave do piso secreto à sala
         this.ferramentas.set("chave_piso_secreto", new ChavePisoSecreto());
         console.log("Você encontrou a chave do piso secreto!");
         return true;
       }
+    } else if (nomeObjeto === "portao_garagem") {
+      let ferramenta = this.engine.mochila.pega(nomeFerramenta);
+      let objeto = this.objetos.get("portao_garagem");
+
+      if (ferramenta && objeto && objeto.usar(ferramenta)) {
+        console.log("Portão da garagem aberto!");
+        return true;
+      }
     }
+
     return false;
   }
 }
@@ -124,8 +133,10 @@ export class Cozinha extends Sala {
       if (objeto && objeto.usar()) {
         // Adiciona controle remoto sem pilhas e pilhas separadas
         let controle = new ControleRemoto();
+        controle.colocarPilhas();
         this.ferramentas.set("controle_remoto", controle);
         console.log("Você encontrou um controle remoto com pilhas!");
+
         return true;
       }
     }
@@ -229,17 +240,8 @@ export class Fundos extends Sala {
 
   usa(nomeFerramenta, nomeObjeto) {
     validate(arguments, ["String", "String"]);
-    if (nomeObjeto === "portao_fundos") {
-      let ferramenta = this.engine.mochila.pega(nomeFerramenta);
-      let objeto = this.objetos.get("portao_fundos");
 
-      if (ferramenta && objeto && objeto.usar(ferramenta)) {
-        // Remove o cachorro quando o portão abre
-        this.objetos.delete("cachorro");
-        console.log("Portão aberto! O cachorro correu para fora!");
-        return true;
-      }
-    } else if (nomeObjeto === "cachorro") {
+    if (nomeObjeto === "cachorro") {
       let objeto = this.objetos.get("cachorro");
       if (objeto) {
         let resultado = objeto.usar();
@@ -250,6 +252,8 @@ export class Fundos extends Sala {
         }
       }
     }
+
+    // Não permite interagir com portao_fundos aqui
     return false;
   }
 }
