@@ -148,23 +148,25 @@ export class JogoOtto extends Engine {
     // Configuração das conexões entre salas (portas)
     // Jardim conecta apenas com Hall Inferior
     jardim.portas.set(hallInferior.nome, hallInferior);
+    jardim.portas.set(garagem.nome, garagem);
 
     // Hall Inferior é o centro - conecta com várias salas
     hallInferior.portas.set(jardim.nome, jardim);
     hallInferior.portas.set(cozinha.nome, cozinha);
-    hallInferior.portas.set(banheiro.nome, banheiro);
-    hallInferior.portas.set(garagem.nome, garagem);
     hallInferior.portas.set(salaEstar.nome, salaEstar);
-    hallInferior.portas.set(hallSuperior.nome, hallSuperior);
 
     // Conexões das salas com Hall Inferior
     cozinha.portas.set(hallInferior.nome, hallInferior);
-    banheiro.portas.set(hallInferior.nome, hallInferior);
-    garagem.portas.set(hallInferior.nome, hallInferior);
+    cozinha.portas.set(banheiro.nome, banheiro);
+
+    banheiro.portas.set(cozinha.nome, cozinha);
+
+    garagem.portas.set(jardim.nome, jardim);
 
     // Sala de Estar conecta com Hall Inferior e Sala de Jantar
     salaEstar.portas.set(hallInferior.nome, hallInferior);
     salaEstar.portas.set(salaJantar.nome, salaJantar);
+    salaEstar.portas.se(hallSuperior.nome, hallSuperior);
 
     // Sala de Jantar conecta com Sala de Estar e Fundos
     salaJantar.portas.set(salaEstar.nome, salaEstar);
@@ -174,14 +176,16 @@ export class JogoOtto extends Engine {
     fundos.portas.set(salaJantar.nome, salaJantar);
 
     // Hall Superior conecta com Hall Inferior, Quarto, Biblioteca e Sótão
-    hallSuperior.portas.set(hallInferior.nome, hallInferior);
+    hallSuperior.portas.set(salaEstar.nome, salaEstar);
     hallSuperior.portas.set(quarto.nome, quarto);
     hallSuperior.portas.set(biblioteca.nome, biblioteca);
     hallSuperior.portas.set(sotao.nome, sotao);
 
     // Conexões das salas superiores
     quarto.portas.set(hallSuperior.nome, hallSuperior);
+
     biblioteca.portas.set(hallSuperior.nome, hallSuperior);
+
     sotao.portas.set(hallSuperior.nome, hallSuperior);
 
     // Define a sala inicial (Otto começa no jardim, na frente da casa)

@@ -10,7 +10,6 @@ import {
   PeDeCabra,
   Relogio,
   ChavePisoSecreto,
-  Pilhas,
 } from "./Ferramentas.js";
 import {
   PedacoTerra,
@@ -77,10 +76,8 @@ export class Cozinha extends Sala {
       if (objeto && objeto.usar()) {
         // Adiciona controle remoto sem pilhas e pilhas separadas
         let controle = new ControleRemoto();
-        let pilhas = new Pilhas();
         this.ferramentas.set("controle_remoto", controle);
-        this.ferramentas.set("pilhas", pilhas);
-        console.log("Você encontrou um controle remoto e pilhas!");
+        console.log("Você encontrou um controle remoto com pilhas!");
         return true;
       }
     }

@@ -82,9 +82,3 @@ export class ChavePisoSecreto extends Ferramenta {
     super("chave_piso_secreto");
   }
 }
-
-export class Pilhas extends Ferramenta {
-  constructor() {
-    super("pilhas");
-  }
-}
