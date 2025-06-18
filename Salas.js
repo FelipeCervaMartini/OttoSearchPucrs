@@ -93,6 +93,21 @@ export class HallInferior extends Sala {
     this.objetos.set("espelho", new Espelho(engine));
     this.objetos.set("porta_sala_estar", new PortaSalaEstar());
   }
+  usa(nomeFerramenta, nomeObjeto) {
+    validate(arguments, ["String", "String"]);
+
+    if (nomeObjeto === "porta_sala_estar") {
+      const ferramenta = this.engine.mochila.pega(nomeFerramenta);
+      const objeto = this.objetos.get("porta_sala_estar");
+
+      if (ferramenta && objeto && objeto.usar(ferramenta)) {
+        console.log("Você destrancou a porta da sala de estar!");
+        return true;
+      }
+    }
+
+    return false;
+  }
 }
 
 export class Cozinha extends Sala {
