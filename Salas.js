@@ -33,7 +33,7 @@ export class Jardim extends Sala {
     validate(engine, Engine);
     super("Jardim", engine);
     this.objetos.set("pedaco_terra", new PedacoTerra());
-    this.objetos.set("espelho", new Espelho(engine));
+    this.objetos.set("portao_garagem", new PortaoGaragem());
   }
 
   usa(nomeFerramenta, nomeObjeto) {
@@ -54,11 +54,44 @@ export class Jardim extends Sala {
   }
 }
 
+export class Garagem extends Sala {
+  constructor(engine) {
+    validate(engine, Engine);
+    super("Garagem", engine);
+
+    this.objetos.set("carro", new CarroGaragem());
+    this.ferramentas.set("pa", new Pa());
+  }
+
+  usa(nomeFerramenta, nomeObjeto) {
+    validate(arguments, ["String", "String"]);
+    if (nomeObjeto === "portao_garagem") {
+      let ferramenta = this.engine.mochila.pega(nomeFerramenta);
+      let objeto = this.objetos.get("portao_garagem");
+
+      if (ferramenta && objeto && objeto.usar(ferramenta)) {
+        console.log("Portão da garagem aberto!");
+        return true;
+      }
+    } else if (nomeObjeto === "carro") {
+      let ferramenta = this.engine.mochila.pega(nomeFerramenta);
+      let objeto = this.objetos.get("carro");
+
+      if (ferramenta && objeto && objeto.usar(ferramenta)) {
+        console.log("Você quebrou o vidro do carro, mas ele estava vazio.");
+        return true;
+      }
+    }
+    return false;
+  }
+}
+
 export class HallInferior extends Sala {
   constructor(engine) {
     validate(engine, Engine);
     super("Hall_Inferior", engine);
     this.objetos.set("espelho", new Espelho(engine));
+    this.objetos.set("porta_sala_estar", new PortaSalaEstar());
   }
 }
 
@@ -108,43 +141,10 @@ export class Banheiro extends Sala {
   }
 }
 
-export class Garagem extends Sala {
-  constructor(engine) {
-    validate(engine, Engine);
-    super("Garagem", engine);
-    this.objetos.set("portao_garagem", new PortaoGaragem());
-    this.objetos.set("carro", new CarroGaragem());
-    this.ferramentas.set("pa", new Pa());
-  }
-
-  usa(nomeFerramenta, nomeObjeto) {
-    validate(arguments, ["String", "String"]);
-    if (nomeObjeto === "portao_garagem") {
-      let ferramenta = this.engine.mochila.pega(nomeFerramenta);
-      let objeto = this.objetos.get("portao_garagem");
-
-      if (ferramenta && objeto && objeto.usar(ferramenta)) {
-        console.log("Portão da garagem aberto!");
-        return true;
-      }
-    } else if (nomeObjeto === "carro") {
-      let ferramenta = this.engine.mochila.pega(nomeFerramenta);
-      let objeto = this.objetos.get("carro");
-
-      if (ferramenta && objeto && objeto.usar(ferramenta)) {
-        console.log("Você quebrou o vidro do carro, mas ele estava vazio.");
-        return true;
-      }
-    }
-    return false;
-  }
-}
-
 export class SalaEstar extends Sala {
   constructor(engine) {
     validate(engine, Engine);
     super("Sala_de_Estar", engine);
-    this.objetos.set("porta_sala_estar", new PortaSalaEstar());
   }
 
   usa(nomeFerramenta, nomeObjeto) {
@@ -167,6 +167,7 @@ export class SalaJantar extends Sala {
     validate(engine, Engine);
     super("Sala_de_Jantar", engine);
     this.objetos.set("armario_sala_jantar", new ArmarioSalaJantar());
+    this.objetos.set("portao_fundos", new PortaoFundos());
   }
 
   usa(nomeFerramenta, nomeObjeto) {
@@ -188,7 +189,7 @@ export class Fundos extends Sala {
   constructor(engine) {
     validate(engine, Engine);
     super("Fundos", engine);
-    this.objetos.set("portao_fundos", new PortaoFundos());
+
     this.objetos.set("cachorro", new Cachorro());
     this.ferramentas.set("pe_de_cabra", new PeDeCabra());
   }
@@ -225,6 +226,20 @@ export class HallSuperior extends Sala {
     validate(engine, Engine);
     super("Hall_Superior", engine);
     this.objetos.set("espelho", new Espelho(engine));
+    this.objetos.set("porta_biblioteca", new PortaBiblioteca());
+  }
+  usa(nomeFerramenta, nomeObjeto) {
+    validate(arguments, ["String", "String"]);
+    if (nomeObjeto === "porta_biblioteca") {
+      let ferramenta = this.engine.mochila.pega(nomeFerramenta);
+      let objeto = this.objetos.get("porta_biblioteca");
+
+      if (ferramenta && objeto && objeto.usar(ferramenta)) {
+        console.log("Porta da biblioteca forçada!");
+        return true;
+      }
+    }
+    return false;
   }
 }
 
@@ -255,21 +270,13 @@ export class Biblioteca extends Sala {
   constructor(engine) {
     validate(engine, Engine);
     super("Biblioteca", engine);
-    this.objetos.set("porta_biblioteca", new PortaBiblioteca());
     this.objetos.set("livros", new LivrosBiblioteca());
   }
 
   usa(nomeFerramenta, nomeObjeto) {
     validate(arguments, ["String", "String"]);
-    if (nomeObjeto === "porta_biblioteca") {
-      let ferramenta = this.engine.mochila.pega(nomeFerramenta);
-      let objeto = this.objetos.get("porta_biblioteca");
 
-      if (ferramenta && objeto && objeto.usar(ferramenta)) {
-        console.log("Porta da biblioteca forçada!");
-        return true;
-      }
-    } else if (nomeObjeto === "livros") {
+    if (nomeObjeto === "livros") {
       let objeto = this.objetos.get("livros");
       if (objeto && objeto.usar()) {
         console.log("Você leu as anotações nos livros!");
