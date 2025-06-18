@@ -29,6 +29,7 @@ export class JogoOtto extends Engine {
     this.#nivelCansaco = 0; // Começa sem cansaço (0-100)
     this.#jogoTerminado = false;
     this.#motivoTermino = "";
+    this.mochila = new Mochila(5);
   }
 
   get horaAtual() {
@@ -166,7 +167,7 @@ export class JogoOtto extends Engine {
     // Sala de Estar conecta com Hall Inferior e Sala de Jantar
     salaEstar.portas.set(hallInferior.nome, hallInferior);
     salaEstar.portas.set(salaJantar.nome, salaJantar);
-    salaEstar.portas.se(hallSuperior.nome, hallSuperior);
+    salaEstar.portas.set(hallSuperior.nome, hallSuperior);
 
     // Sala de Jantar conecta com Sala de Estar e Fundos
     salaJantar.portas.set(salaEstar.nome, salaEstar);
@@ -269,7 +270,29 @@ export class JogoOtto extends Engine {
             this.avancaTempo(5); // Mudar de sala leva 5 minutos
           }
           break;
-
+        case "pega":
+          const ferramenta = this.salaCorrente.pega(tokens[1]);
+          if (ferramenta) {
+            if (this.mochila.guarda(ferramenta)) {
+              console.log("Ok! " + tokens[1] + " guardado!");
+              this.avancaTempo(10);
+            } else {
+              console.log(
+                "Não foi possível guardar " + tokens[1] + ", mochila cheia!"
+              );
+            }
+          } else {
+            console.log("Objeto " + tokens[1] + " não encontrado.");
+          }
+          break;
+        case "remove":
+          if (this.mochila.remove(tokens[1])) {
+            console.log(tokens[1] + " descartado da mochila.");
+            this.avancaTempo(5);
+          } else {
+            console.log("Você não tem " + tokens[1] + " na mochila.");
+          }
+          break;
         case "descansar":
           this.descansar();
           break;
@@ -289,7 +312,7 @@ export class JogoOtto extends Engine {
         default:
           console.log("Comando desconhecido: " + tokens[0]);
           console.log(
-            "Comandos disponíveis: pega, usa, sai, inventario, descansar, olhar, fim"
+            "Comandos disponíveis: pega, usa, sai, remove, inventario, descansar, olhar, fim"
           );
           break;
       }

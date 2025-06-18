@@ -26,13 +26,18 @@ export class Ferramenta {
 // ---------------------------------------------
 export class Mochila {
   #ferramentas;
-
-  constructor() {
+  #limite;
+  constructor(limite = 5) {
     this.#ferramentas = [];
+    this.#limite = limite;
   }
 
   guarda(ferramenta) {
     validate(ferramenta, Ferramenta);
+    if (this.#ferramentas.length >= this.#limite) {
+      console.log("Mochila cheia! Não é possível guardar mais ferramentas.");
+      return false; // não guardou
+    }
     this.#ferramentas.push(ferramenta);
   }
 
@@ -45,6 +50,16 @@ export class Mochila {
   tem(nomeFerramenta) {
     validate(arguments, ["String"]);
     return this.#ferramentas.some((f) => f.nome === nomeFerramenta);
+  }
+  remove(nomeFerramenta) {
+    validate(arguments, ["String"]);
+
+    const index = this.#ferramentas.findIndex((f) => f.nome === nomeFerramenta);
+    if (index >= 0) {
+      this.#ferramentas.splice(index, 1);
+      return true; // removido com sucesso
+    }
+    return false; // não encontrou para remover
   }
 
   inventario() {
