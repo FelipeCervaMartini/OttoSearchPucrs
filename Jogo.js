@@ -214,7 +214,7 @@ export class JogoOtto extends Engine {
       acao = prompt("O que você deseja fazer? ");
       tokens = acao.split(" ");
 
-      switch (tokens[0]) {
+      switch (tokens[0].toLowerCase()) {
         case "fim":
           this.fim = true;
           break;
