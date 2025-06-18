@@ -1,7 +1,8 @@
 // Arquivo: salasOtto.js
 // Salas específicas do jogo do Otto
 
-import { Sala } from "./Basicas.js";
+import { validate } from "bycontract";
+import { Engine, Sala } from "./Basicas.js";
 import {
   Pa,
   ControleRemoto,
@@ -30,12 +31,14 @@ import {
 
 export class Jardim extends Sala {
   constructor(engine) {
+    validate(engine, Engine);
     super("Jardim", engine);
     this.objetos.set("pedaco_terra", new PedacoTerra());
     this.objetos.set("espelho", new Espelho(engine));
   }
 
   usa(nomeFerramenta, nomeObjeto) {
+    validate(arguments, ["String", "String"]);
     if (nomeObjeto === "pedaco_terra") {
       let ferramenta = this.engine.mochila.pega(nomeFerramenta);
       let objeto = this.objetos.get("pedaco_terra");
@@ -54,6 +57,7 @@ export class Jardim extends Sala {
 
 export class HallInferior extends Sala {
   constructor(engine) {
+    validate(engine, Engine);
     super("Hall_Inferior", engine);
     this.objetos.set("espelho", new Espelho(engine));
   }
@@ -61,11 +65,13 @@ export class HallInferior extends Sala {
 
 export class Cozinha extends Sala {
   constructor(engine) {
+    validate(engine, Engine);
     super("Cozinha", engine);
     this.objetos.set("gaveta_cozinha", new GavetaCozinha());
   }
 
   usa(nomeFerramenta, nomeObjeto) {
+    validate(arguments, ["String", "String"]);
     if (nomeObjeto === "gaveta_cozinha") {
       let objeto = this.objetos.get("gaveta_cozinha");
       if (objeto && objeto.usar()) {
@@ -84,11 +90,13 @@ export class Cozinha extends Sala {
 
 export class Banheiro extends Sala {
   constructor(engine) {
+    validate(engine, Engine);
     super("Banheiro", engine);
     this.objetos.set("armario_vidro", new ArmarioVidro());
   }
 
   usa(nomeFerramenta, nomeObjeto) {
+    validate(arguments, ["String", "String"]);
     if (nomeObjeto === "armario_vidro") {
       let ferramenta = this.engine.mochila.pega(nomeFerramenta);
       let objeto = this.objetos.get("armario_vidro");
@@ -105,6 +113,7 @@ export class Banheiro extends Sala {
 
 export class Garagem extends Sala {
   constructor(engine) {
+    validate(engine, Engine);
     super("Garagem", engine);
     this.objetos.set("portao_garagem", new PortaoGaragem());
     this.objetos.set("carro", new CarroGaragem());
@@ -112,6 +121,7 @@ export class Garagem extends Sala {
   }
 
   usa(nomeFerramenta, nomeObjeto) {
+    validate(arguments, ["String", "String"]);
     if (nomeObjeto === "portao_garagem") {
       let ferramenta = this.engine.mochila.pega(nomeFerramenta);
       let objeto = this.objetos.get("portao_garagem");
@@ -135,11 +145,13 @@ export class Garagem extends Sala {
 
 export class SalaEstar extends Sala {
   constructor(engine) {
+    validate(engine, Engine);
     super("Sala_de_Estar", engine);
     this.objetos.set("porta_sala_estar", new PortaSalaEstar());
   }
 
   usa(nomeFerramenta, nomeObjeto) {
+    validate(arguments, ["String", "String"]);
     if (nomeObjeto === "porta_sala_estar") {
       let ferramenta = this.engine.mochila.pega(nomeFerramenta);
       let objeto = this.objetos.get("porta_sala_estar");
@@ -155,11 +167,13 @@ export class SalaEstar extends Sala {
 
 export class SalaJantar extends Sala {
   constructor(engine) {
+    validate(engine, Engine);
     super("Sala_de_Jantar", engine);
     this.objetos.set("armario_sala_jantar", new ArmarioSalaJantar());
   }
 
   usa(nomeFerramenta, nomeObjeto) {
+    validate(arguments, ["String", "String"]);
     if (nomeObjeto === "armario_sala_jantar") {
       let ferramenta = this.engine.mochila.pega(nomeFerramenta);
       let objeto = this.objetos.get("armario_sala_jantar");
@@ -175,6 +189,7 @@ export class SalaJantar extends Sala {
 
 export class Fundos extends Sala {
   constructor(engine) {
+    validate(engine, Engine);
     super("Fundos", engine);
     this.objetos.set("portao_fundos", new PortaoFundos());
     this.objetos.set("cachorro", new Cachorro());
@@ -182,6 +197,7 @@ export class Fundos extends Sala {
   }
 
   usa(nomeFerramenta, nomeObjeto) {
+    validate(arguments, ["String", "String"]);
     if (nomeObjeto === "portao_fundos") {
       let ferramenta = this.engine.mochila.pega(nomeFerramenta);
       let objeto = this.objetos.get("portao_fundos");
@@ -209,6 +225,7 @@ export class Fundos extends Sala {
 
 export class HallSuperior extends Sala {
   constructor(engine) {
+    validate(engine, Engine);
     super("Hall_Superior", engine);
     this.objetos.set("espelho", new Espelho(engine));
   }
@@ -216,11 +233,13 @@ export class HallSuperior extends Sala {
 
 export class Quarto extends Sala {
   constructor(engine) {
+    validate(engine, Engine);
     super("Quarto", engine);
     this.objetos.set("armario_quarto", new ArmarioQuarto());
   }
 
   usa(nomeFerramenta, nomeObjeto) {
+    validate(arguments, ["String", "String"]);
     if (nomeObjeto === "armario_quarto") {
       let ferramenta = this.engine.mochila.pega(nomeFerramenta);
       let objeto = this.objetos.get("armario_quarto");
@@ -237,12 +256,14 @@ export class Quarto extends Sala {
 
 export class Biblioteca extends Sala {
   constructor(engine) {
+    validate(engine, Engine);
     super("Biblioteca", engine);
     this.objetos.set("porta_biblioteca", new PortaBiblioteca());
     this.objetos.set("livros", new LivrosBiblioteca());
   }
 
   usa(nomeFerramenta, nomeObjeto) {
+    validate(arguments, ["String", "String"]);
     if (nomeObjeto === "porta_biblioteca") {
       let ferramenta = this.engine.mochila.pega(nomeFerramenta);
       let objeto = this.objetos.get("porta_biblioteca");
@@ -264,11 +285,13 @@ export class Biblioteca extends Sala {
 
 export class Sotao extends Sala {
   constructor(engine) {
+    validate(engine, Engine);
     super("Sotao", engine);
     this.objetos.set("porta_sotao", new PortaSotao());
   }
 
   usa(nomeFerramenta, nomeObjeto) {
+    validate(arguments, ["String", "String"]);
     if (nomeObjeto === "porta_sotao") {
       let ferramenta = this.engine.mochila.pega(nomeFerramenta);
       let objeto = this.objetos.get("porta_sotao");
