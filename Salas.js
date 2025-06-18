@@ -127,16 +127,14 @@ export class Banheiro extends Sala {
 
   usa(nomeFerramenta, nomeObjeto) {
     validate(arguments, ["String", "String"]);
-    if (nomeObjeto === "armario_vidro") {
-      let ferramenta = this.engine.mochila.pega(nomeFerramenta);
-      let objeto = this.objetos.get("armario_vidro");
+    const objeto = this.objetos.get(nomeObjeto);
 
-      if (ferramenta && objeto && objeto.usar(ferramenta)) {
-        this.ferramentas.set("chave_casa", new ChaveCasa());
-        console.log("Você encontrou a chave da casa!");
-        return true;
-      }
+    if (!nomeFerramenta && objeto && objeto.usar()) {
+      this.ferramentas.set("chave_casa", new ChaveCasa());
+      console.log("Você encontrou a chave da casa!");
+      return true;
     }
+
     return false;
   }
 }

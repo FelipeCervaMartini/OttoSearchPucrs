@@ -92,12 +92,9 @@ export class ArmarioVidro extends Objeto {
     );
   }
 
-  usar(ferramenta) {
-    if (ferramenta instanceof ControleRemoto && ferramenta.usar()) {
-      this.acaoOk = true;
-      return true;
-    }
-    return false;
+  usar() {
+    this.acaoOk = true;
+    return true;
   }
 }
 
