@@ -172,6 +172,7 @@ export class SalaJantar extends Sala {
 
   usa(nomeFerramenta, nomeObjeto) {
     validate(arguments, ["String", "String"]);
+
     if (nomeObjeto === "armario_sala_jantar") {
       let ferramenta = this.engine.mochila.pega(nomeFerramenta);
       let objeto = this.objetos.get("armario_sala_jantar");
@@ -180,7 +181,26 @@ export class SalaJantar extends Sala {
         console.log("Armário vazio, nada útil aqui.");
         return true;
       }
+    } else if (nomeObjeto === "portao_fundos") {
+      const ferramenta = this.engine.mochila.pega(nomeFerramenta);
+      const objeto = this.objetos.get("portao_fundos");
+
+      if (ferramenta && objeto && objeto.usar(ferramenta)) {
+        console.log("Você abriu o portão dos fundos!");
+
+        // Remove o cachorro da sala Fundos
+        const salaFundos = this.engine.todasAsSalas.find(
+          (s) => s.nome === "Fundos"
+        );
+        if (salaFundos && salaFundos.objetos.has("cachorro")) {
+          salaFundos.objetos.delete("cachorro");
+          console.log("O cachorro correu para fora ao ver o portão aberto!");
+        }
+
+        return true;
+      }
     }
+
     return false;
   }
 }
