@@ -25,7 +25,7 @@ export class JogoOtto extends Engine {
 
   constructor() {
     super();
-    this.#horaAtual = 10; // Jogo começa às 10h da manhã
+    this.#horaAtual = 1; // Jogo começa às 10h da manhã
     this.#nivelCansaco = 0; // Começa sem cansaço (0-100)
     this.#jogoTerminado = false;
     this.#motivoTermino = "";
@@ -190,6 +190,20 @@ export class JogoOtto extends Engine {
 
     // Define a sala inicial (Otto começa no jardim, na frente da casa)
     this.salaCorrente = cozinha;
+    this.todasAsSalas = [
+      jardim,
+      hallInferior,
+      cozinha,
+      banheiro,
+      garagem,
+      salaEstar,
+      salaJantar,
+      fundos,
+      hallSuperior,
+      quarto,
+      biblioteca,
+      sotao,
+    ];
   }
 
   // Sobrescreve o método joga para incluir comandos específicos do jogo
