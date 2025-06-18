@@ -189,7 +189,7 @@ export class JogoOtto extends Engine {
     sotao.portas.set(hallSuperior.nome, hallSuperior);
 
     // Define a sala inicial (Otto começa no jardim, na frente da casa)
-    this.salaCorrente = jardim;
+    this.salaCorrente = hallInferior;
   }
 
   // Sobrescreve o método joga para incluir comandos específicos do jogo
@@ -264,6 +264,15 @@ export class JogoOtto extends Engine {
           novaSala = this.salaCorrente.sai(tokens[1]);
           if (novaSala == null) {
             console.log("Sala desconhecida...");
+          }
+          if (tokens[1] === "Sala_de_Estar") {
+            const chave = this.salaCorrente.pega("ChaveCasa");
+            if (!chave || !chave.acaoOk) {
+              console.log(
+                "A porta da sala esta trancada. Você precisa usar a chave primeiro!"
+              );
+              break; // bloqueia entrada
+            }
           } else {
             this.salaCorrente = novaSala;
             this.avancaTempo(5); // Mudar de sala leva 5 minutos
