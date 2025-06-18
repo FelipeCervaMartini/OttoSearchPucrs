@@ -1,7 +1,7 @@
 // Arquivo: objetosOtto.js
 // Objetos específicos do jogo do Otto
 
-import { Objeto } from "./Basicas.js";
+import { Objeto, Ferramenta } from "./Basicas.js";
 import { validate } from "bycontract";
 import {
   Pa,
@@ -21,6 +21,7 @@ export class PedacoTerra extends Objeto {
   }
 
   usar(ferramenta) {
+    validate(ferramenta, Ferramenta);
     if (ferramenta instanceof Pa) {
       this.acaoOk = true;
       return true;
@@ -39,6 +40,7 @@ export class CarroGaragem extends Objeto {
   }
 
   usar(ferramenta) {
+    validate(ferramenta, Ferramenta);
     if (ferramenta instanceof Pa) {
       this.acaoOk = true;
       return true;
@@ -57,6 +59,7 @@ export class PortaSalaEstar extends Objeto {
   }
 
   usar(ferramenta) {
+    validate(ferramenta, Ferramenta);
     if (ferramenta instanceof ChaveCasa) {
       this.acaoOk = true;
       return true;
@@ -123,6 +126,7 @@ export class ArmarioSalaJantar extends Objeto {
   }
 
   usar(ferramenta) {
+    validate(ferramenta, Ferramenta);
     if (ferramenta instanceof ChaveCasa) {
       this.acaoOk = true;
       return true;
@@ -141,6 +145,7 @@ export class ArmarioQuarto extends Objeto {
   }
 
   usar(ferramenta) {
+    validate(ferramenta, Ferramenta);
     if (ferramenta instanceof ChaveCasa) {
       this.acaoOk = true;
       return true;
@@ -191,6 +196,7 @@ export class PortaSotao extends Objeto {
   }
 
   usar(ferramenta) {
+    validate(ferramenta, Ferramenta);
     if (ferramenta instanceof ChavePisoSecreto) {
       this.acaoOk = true;
       return "VITORIA";
@@ -209,6 +215,7 @@ export class PortaBiblioteca extends Objeto {
   }
 
   usar(ferramenta) {
+    validate(ferramenta, Ferramenta);
     if (ferramenta instanceof PeDeCabra && ferramenta.usar()) {
       this.acaoOk = true;
       return true;
@@ -227,6 +234,7 @@ export class PortaoFundos extends Objeto {
   }
 
   usar(ferramenta) {
+    validate(ferramenta, Ferramenta);
     if (ferramenta instanceof ControleRemoto && ferramenta.usar()) {
       this.acaoOk = true;
       return true;
@@ -245,6 +253,7 @@ export class PortaoGaragem extends Objeto {
   }
 
   usar(ferramenta) {
+    validate(ferramenta, Ferramenta);
     if (ferramenta instanceof ControleRemoto && ferramenta.usar()) {
       this.acaoOk = true;
       return true;
