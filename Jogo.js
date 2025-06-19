@@ -18,14 +18,14 @@ import {
 } from "./Salas.js";
 
 export class JogoOtto extends Engine {
-  #horaAtual;
-  #nivelCansaco;
-  #jogoTerminado;
-  #motivoTermino;
+  #horaAtual; // Controla o tempo do jogo (10h-19h)
+  #nivelCansaco; // Sistema de cansaço (0-100)
+  #jogoTerminado; // Flag para encerrar o jogo
+  #motivoTermino; // Razão do fim do jogo
 
   constructor() {
     super();
-    this.#horaAtual = 1; // Jogo começa às 10h da manhã
+    this.#horaAtual = 10; // Jogo começa às 10h da manhã
     this.#nivelCansaco = 0; // Começa sem cansaço (0-100)
     this.#jogoTerminado = false;
     this.#motivoTermino = "";
@@ -41,20 +41,22 @@ export class JogoOtto extends Engine {
 
   // Método para avançar o tempo quando o jogador faz ações
   avancaTempo(minutos = 15) {
-    this.#horaAtual += minutos / 60;
+    this.#horaAtual += minutos / 60; // Converte minutos para horas decimais
     this.#nivelCansaco += 2; // Cada ação aumenta um pouco o cansaço
 
-    // Verifica se passou das 19h
+    // Verifica se passou das 19h - Game Over por tempo
     if (this.#horaAtual >= 19 && !this.#jogoTerminado) {
       console.log("\n=== GAME OVER ===");
-      console.log("São 19 horas! Jerry chegou e te encontrou na casa!");
+      console.log(
+        "São 19 horas. A porta range lentamente e Jerry finalmente aparece. O ar fica pesado, o silêncio é quebrado por passos firmes. Você foi pego."
+      );
       console.log("Você não conseguiu escapar a tempo...");
       this.#motivoTermino = "tempo";
       this.indicaFimDeJogo();
       return;
     }
 
-    // Verifica se o cansaço é muito alto
+    // Verifica se o cansaço é muito alto - Game Over por exaustão
     if (this.#nivelCansaco >= 100 && !this.#jogoTerminado) {
       console.log("\n=== GAME OVER ===");
       console.log("Você desmaiou de exaustão!");
@@ -85,7 +87,7 @@ export class JogoOtto extends Engine {
   // Método para descansar e reduzir cansaço
   descansar() {
     if (this.#nivelCansaco > 0) {
-      this.#nivelCansaco = Math.max(0, this.#nivelCansaco - 30);
+      this.#nivelCansaco = Math.max(0, this.#nivelCansaco - 30); // Reduz 30 pontos de cansaço
       this.avancaTempo(30); // Descansar leva 30 minutos
       console.log("Você descansou um pouco. Cansaço reduzido.");
     } else {
@@ -96,7 +98,7 @@ export class JogoOtto extends Engine {
   criaCenario() {
     console.log("=== INVESTIGAÇÃO NA CASA DE JERRY ===");
     console.log(
-      "Otto, o investigador veterano, chegou à casa suspeita às 10h da manhã."
+      "Otto, o investigador veterano, chegou à casa suspeita às 10 da manhã. A construção antiga parecia esquecida pelo tempo, com a pintura descascada e janelas empoeiradas que mal deixavam passar a luz. O jardim à frente estava tomado pelo mato alto, e a cerca de madeira rangia sob o leve vento. A porta da frente, meio entreaberta, dava um convite silencioso e ameaçador ao interior escuro. O ar carregado de abandono e segredos pairava ao redor do local, deixando claro que aquela casa guardava mais do que apenas poeira e silêncio."
     );
     console.log(
       "Objetivo: Encontrar evidências contra Jerry antes que ele apareça às 19h!"
@@ -161,7 +163,7 @@ export class JogoOtto extends Engine {
     sotao.portas.set(hallSuperior.nome, hallSuperior);
 
     // Define a sala inicial (Otto começa no jardim, na frente da casa)
-    this.salaCorrente = cozinha;
+    this.salaCorrente = jardim; // Jogador inicia no jardim
     this.todasAsSalas = [
       jardim,
       hallInferior,
@@ -189,7 +191,7 @@ export class JogoOtto extends Engine {
       console.log(this.salaCorrente.textoDescricao());
 
       acao = prompt("O que você deseja fazer? ");
-      tokens = acao.split(" ");
+      tokens = acao.split(" "); // Quebra comando em palavras
 
       switch (tokens[0].toLowerCase()) {
         case "fim":
@@ -202,6 +204,7 @@ export class JogoOtto extends Engine {
 
         case "usa":
           if (tokens.length >= 3) {
+            // Comando "usa ferramenta objeto"
             if (this.salaCorrente.usa(tokens[1], tokens[2])) {
               console.log("Feito!");
               this.avancaTempo(); // Usar ferramenta leva 15 minutos
@@ -230,6 +233,7 @@ export class JogoOtto extends Engine {
                   `São ${hora}:${minutos.toString().padStart(2, "0")}h`
                 );
 
+                // Avisos baseados no horário
                 if (this.horaAtual >= 18) {
                   console.log("ATENÇÃO: Jerry pode chegar a qualquer momento!");
                 } else if (this.horaAtual >= 17) {
@@ -248,6 +252,7 @@ export class JogoOtto extends Engine {
           break;
 
         case "sai":
+          // Sistema de bloqueio de salas
           const bloqueios = {
             Sala_de_Estar: {
               objeto: "porta_sala_estar",
@@ -272,6 +277,7 @@ export class JogoOtto extends Engine {
 
           novaSala = this.salaCorrente.sai(tokens[1]);
 
+          // Verifica se a sala está bloqueada
           const bloqueio = bloqueios[novaSala?.nome];
           if (bloqueio) {
             const obj = this.salaCorrente.objetos.get(bloqueio.objeto);
@@ -291,12 +297,13 @@ export class JogoOtto extends Engine {
         case "pega":
           if (this.salaCorrente.pega(tokens[1])) {
             console.log("Ok! " + tokens[1] + " guardado!");
-            this.avancaTempo(10);
+            this.avancaTempo(10); // Pegar item leva 10 minutos
           } else {
             console.log("Objeto " + tokens[1] + " não encontrado.");
           }
           break;
         case "remove":
+          // Remove item da mochila e coloca na sala
           const itemRemovido = this.mochila.pega(tokens[1]);
           if (itemRemovido && this.mochila.remove(tokens[1])) {
             this.salaCorrente.ferramentas.set(itemRemovido.nome, itemRemovido);
@@ -311,6 +318,7 @@ export class JogoOtto extends Engine {
           break;
 
         case "olhar":
+          // Comandos especiais de observação
           if (tokens[1] === "espelho") {
             this.olharEspelho();
           } else if (tokens[1] === "relogio") {
@@ -331,6 +339,7 @@ export class JogoOtto extends Engine {
       }
     }
 
+    // Mensagens finais baseadas no motivo do término
     console.log("\n=== JOGO ENCERRADO ===");
     if (this.#motivoTermino === "vitoria") {
       console.log("Otto completou sua missão com sucesso!");
