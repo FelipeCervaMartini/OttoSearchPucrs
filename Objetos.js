@@ -1,5 +1,5 @@
-// Arquivo: objetosOtto.js
-// Objetos específicos do jogo do Otto
+// Arquivo: objetos
+// Objetos específicos do jogo
 
 import { Objeto, Ferramenta } from "./Basicas.js";
 import { validate } from "bycontract";
@@ -11,6 +11,7 @@ import {
   ChavePisoSecreto,
 } from "./Ferramentas.js";
 
+// Objeto terra escavável no jardim - contém chave do piso secreto
 export class PedacoTerra extends Objeto {
   constructor() {
     super(
@@ -20,6 +21,7 @@ export class PedacoTerra extends Objeto {
     );
   }
 
+  // Só pode ser usado com pá
   usar(ferramenta) {
     validate(ferramenta, Ferramenta);
     if (ferramenta instanceof Pa) {
@@ -30,6 +32,7 @@ export class PedacoTerra extends Objeto {
   }
 }
 
+// Carro na garagem - pode ser quebrado mas está vazio
 export class CarroGaragem extends Objeto {
   constructor() {
     super(
@@ -39,6 +42,7 @@ export class CarroGaragem extends Objeto {
     );
   }
 
+  // Vidro pode ser quebrado com pá
   usar(ferramenta) {
     validate(ferramenta, Ferramenta);
     if (ferramenta instanceof Pa) {
@@ -49,6 +53,7 @@ export class CarroGaragem extends Objeto {
   }
 }
 
+// Porta trancada da sala de estar
 export class PortaSalaEstar extends Objeto {
   constructor() {
     super(
@@ -58,6 +63,7 @@ export class PortaSalaEstar extends Objeto {
     );
   }
 
+  // Precisa da chave da casa para abrir
   usar(ferramenta) {
     validate(ferramenta, Ferramenta);
     if (ferramenta instanceof ChaveCasa) {
@@ -68,6 +74,7 @@ export class PortaSalaEstar extends Objeto {
   }
 }
 
+// Gaveta da cozinha - contém controle remoto
 export class GavetaCozinha extends Objeto {
   constructor() {
     super(
@@ -77,12 +84,14 @@ export class GavetaCozinha extends Objeto {
     );
   }
 
+  // Abre sem ferramenta
   usar() {
     this.acaoOk = true;
     return true;
   }
 }
 
+// Armário do banheiro - contém chave da casa
 export class ArmarioVidro extends Objeto {
   constructor() {
     super(
@@ -92,27 +101,31 @@ export class ArmarioVidro extends Objeto {
     );
   }
 
+  // Abre sem ferramenta
   usar() {
     this.acaoOk = true;
     return true;
   }
 }
 
+// Livros da biblioteca - contêm pistas importantes
 export class LivrosBiblioteca extends Objeto {
   constructor() {
     super(
       "livros",
       "Livros empoeirados na estante",
-      "Nos livros há anotações: 'A chave está enterrada no jardim, próximo à roseira murcha'"
+      "Nos livros há anotações: 'A chave está enterrada no jardim'"
     );
   }
 
+  // Lê sem ferramenta - revela localização da chave
   usar() {
     this.acaoOk = true;
     return true;
   }
 }
 
+// Armário da sala de jantar - vazio
 export class ArmarioSalaJantar extends Objeto {
   constructor() {
     super(
@@ -122,6 +135,7 @@ export class ArmarioSalaJantar extends Objeto {
     );
   }
 
+  // Precisa da chave da casa
   usar(ferramenta) {
     validate(ferramenta, Ferramenta);
     if (ferramenta instanceof ChaveCasa) {
@@ -132,6 +146,7 @@ export class ArmarioSalaJantar extends Objeto {
   }
 }
 
+// Armário do quarto - contém relógio
 export class ArmarioQuarto extends Objeto {
   constructor() {
     super(
@@ -141,6 +156,7 @@ export class ArmarioQuarto extends Objeto {
     );
   }
 
+  // Precisa da chave da casa
   usar(ferramenta) {
     validate(ferramenta, Ferramenta);
     if (ferramenta instanceof ChaveCasa) {
@@ -151,6 +167,7 @@ export class ArmarioQuarto extends Objeto {
   }
 }
 
+// Cachorro perigoso nos fundos - causa derrota se interagir
 export class Cachorro extends Objeto {
   constructor() {
     super(
@@ -160,12 +177,14 @@ export class Cachorro extends Objeto {
     );
   }
 
+  // Interação direta causa derrota
   usar() {
     // Interagir diretamente com o cachorro causa derrota
     return "DERROTA_CACHORRO";
   }
 }
 
+// Espelho que mostra nível de cansaço do Otto
 export class Espelho extends Objeto {
   #engine;
 
@@ -178,6 +197,7 @@ export class Espelho extends Objeto {
     this.#engine = engine;
   }
 
+  // Mostra estado de cansaço baseado no nível
   usar() {
     const c = this.#engine.nivelCansaco;
     if (c < 20) {
@@ -185,15 +205,20 @@ export class Espelho extends Objeto {
     } else if (c < 50) {
       console.log("Otto está um pouco cansado mas ainda determinado.");
     } else if (c < 80) {
-      console.log("Otto está visivelmente cansado, com olheiras.");
+      console.log(
+        "Otto está visivelmente cansado, com olheiras marcantes e expressão pesada."
+      );
     } else {
-      console.log("Otto está exausto, quase no limite.");
+      console.log(
+        "Otto está exausto, quase no limite, mal se reconhecendo no espelho. "
+      );
     }
 
     return true;
   }
 }
 
+// Porta do sótão - objetivo final, condição de vitória
 export class PortaSotao extends Objeto {
   constructor() {
     super(
@@ -203,6 +228,7 @@ export class PortaSotao extends Objeto {
     );
   }
 
+  // Precisa da chave do piso secreto - condição de vitória
   usar(ferramenta) {
     validate(ferramenta, Ferramenta);
     if (ferramenta instanceof ChavePisoSecreto) {
@@ -213,6 +239,7 @@ export class PortaSotao extends Objeto {
   }
 }
 
+// Porta emperrada da biblioteca
 export class PortaBiblioteca extends Objeto {
   constructor() {
     super(
@@ -222,6 +249,7 @@ export class PortaBiblioteca extends Objeto {
     );
   }
 
+  // Precisa de pé de cabra para forçar
   usar(ferramenta) {
     validate(ferramenta, Ferramenta);
     if (ferramenta instanceof PeDeCabra && ferramenta.usar()) {
@@ -232,6 +260,7 @@ export class PortaBiblioteca extends Objeto {
   }
 }
 
+// Portão dos fundos - controlado por controle remoto
 export class PortaoFundos extends Objeto {
   constructor() {
     super(
@@ -241,6 +270,7 @@ export class PortaoFundos extends Objeto {
     );
   }
 
+  // Precisa do controle remoto funcionando
   usar(ferramenta) {
     validate(ferramenta, Ferramenta);
     if (ferramenta instanceof ControleRemoto && ferramenta.usar()) {
@@ -251,6 +281,7 @@ export class PortaoFundos extends Objeto {
   }
 }
 
+// Portão da garagem - também controlado por controle remoto
 export class PortaoGaragem extends Objeto {
   constructor() {
     super(
@@ -260,6 +291,7 @@ export class PortaoGaragem extends Objeto {
     );
   }
 
+  // Precisa do controle remoto funcionando
   usar(ferramenta) {
     validate(ferramenta, Ferramenta);
     if (ferramenta instanceof ControleRemoto && ferramenta.usar()) {
