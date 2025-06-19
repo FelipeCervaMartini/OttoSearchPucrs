@@ -93,34 +93,6 @@ export class JogoOtto extends Engine {
     }
   }
 
-  // Método para olhar no espelho
-  olharEspelho() {
-    let descricao = "";
-    if (this.#nivelCansaco < 20) {
-      descricao = "Otto parece alerta e focado.";
-    } else if (this.#nivelCansaco < 50) {
-      descricao = "Otto está um pouco cansado mas ainda determinado.";
-    } else if (this.#nivelCansaco < 80) {
-      descricao = "Otto está visivelmente cansado, com olheiras.";
-    } else {
-      descricao = "Otto está exausto, quase no limite.";
-    }
-    console.log(descricao);
-  }
-
-  // Método para ver as horas no relógio
-  olharRelogio() {
-    let hora = Math.floor(this.#horaAtual);
-    let minutos = Math.floor((this.#horaAtual - hora) * 60);
-    console.log(`São ${hora}:${minutos.toString().padStart(2, "0")}h`);
-
-    if (this.#horaAtual >= 18) {
-      console.log("ATENÇÃO: Jerry pode chegar a qualquer momento!");
-    } else if (this.#horaAtual >= 17) {
-      console.log("Cuidado: Está ficando tarde...");
-    }
-  }
-
   criaCenario() {
     console.log("=== INVESTIGAÇÃO NA CASA DE JERRY ===");
     console.log(
@@ -216,15 +188,6 @@ export class JogoOtto extends Engine {
       console.log("-------------------------");
       console.log(this.salaCorrente.textoDescricao());
 
-      // Mostra informações adicionais
-      let hora = Math.floor(this.horaAtual);
-      let minutos = Math.floor((this.horaAtual - hora) * 60);
-      console.log(
-        `Hora atual: ${hora}:${minutos
-          .toString()
-          .padStart(2, "0")}h | Cansaço: ${this.nivelCansaco}/100`
-      );
-
       acao = prompt("O que você deseja fazer? ");
       tokens = acao.split(" ");
 
@@ -264,7 +227,26 @@ export class JogoOtto extends Engine {
               );
             }
           } else if (tokens.length === 2) {
+            const nome = tokens[1];
+
             // Comando "usa objeto" sem ferramenta
+            if (nome === "relogio") {
+              const ferramenta = this.mochila.pega("relogio");
+              if (ferramenta && ferramenta.verHoras) {
+                let hora = Math.floor(ferramenta.verHoras());
+                let minutos = Math.floor((ferramenta.verHoras() - hora) * 60);
+                console.log(
+                  `São ${hora}:${minutos.toString().padStart(2, "0")}h`
+                );
+
+                if (this.horaAtual >= 18) {
+                  console.log("ATENÇÃO: Jerry pode chegar a qualquer momento!");
+                } else if (this.horaAtual >= 17) {
+                  console.log("Cuidado: Está ficando tarde...");
+                }
+                this.avancaTempo(1);
+              }
+            }
             if (this.salaCorrente.usa("", tokens[1])) {
               console.log("Feito!");
               this.avancaTempo();

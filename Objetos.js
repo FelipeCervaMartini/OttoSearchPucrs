@@ -179,7 +179,18 @@ export class Espelho extends Objeto {
   }
 
   usar() {
-    return this.#engine.nivelCansaco;
+    const c = this.#engine.nivelCansaco;
+    if (c < 20) {
+      console.log("Otto parece alerta e focado.");
+    } else if (c < 50) {
+      console.log("Otto está um pouco cansado mas ainda determinado.");
+    } else if (c < 80) {
+      console.log("Otto está visivelmente cansado, com olheiras.");
+    } else {
+      console.log("Otto está exausto, quase no limite.");
+    }
+
+    return true;
   }
 }
 

@@ -104,6 +104,13 @@ export class HallInferior extends Sala {
   }
   usa(nomeFerramenta, nomeObjeto) {
     validate(arguments, ["String", "String"]);
+    if (nomeObjeto === "espelho" && !nomeFerramenta) {
+      let objeto = this.objetos.get("espelho");
+      if (objeto) {
+        objeto.usar();
+        return true;
+      }
+    }
 
     if (nomeObjeto === "porta_sala_estar") {
       const ferramenta = this.engine.mochila.pega(nomeFerramenta);
@@ -267,6 +274,13 @@ export class HallSuperior extends Sala {
   }
   usa(nomeFerramenta, nomeObjeto) {
     validate(arguments, ["String", "String"]);
+    if (nomeObjeto === "espelho" && !nomeFerramenta) {
+      let objeto = this.objetos.get("espelho");
+      if (objeto) {
+        objeto.usar();
+        return true;
+      }
+    }
     if (nomeObjeto === "porta_biblioteca") {
       let ferramenta = this.engine.mochila.pega(nomeFerramenta);
       let objeto = this.objetos.get("porta_biblioteca");
