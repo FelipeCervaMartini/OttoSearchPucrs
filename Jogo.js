@@ -42,7 +42,7 @@ export class JogoOtto extends Engine {
   // Método para avançar o tempo quando o jogador faz ações
   avancaTempo(minutos = 15) {
     this.#horaAtual += minutos / 60; // Converte minutos para horas decimais
-    this.#nivelCansaco += 2; // Cada ação aumenta um pouco o cansaço
+    this.#nivelCansaco += 4; // Cada ação aumenta um pouco o cansaço
 
     // Verifica se passou das 19h - Game Over por tempo
     if (this.#horaAtual >= 19 && !this.#jogoTerminado) {

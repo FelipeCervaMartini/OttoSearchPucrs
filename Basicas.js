@@ -109,7 +109,7 @@ export class Objeto {
 
   usa(ferramenta, objeto) {
     // Método base - deve ser sobrescrito nas classes filhas
-    return false; // ver se isso precisa mesmo
+    return false;
   }
 }
 
@@ -243,7 +243,7 @@ export class Engine {
   set fim(valor) {
     validate(valor, "Boolean");
     this.#fim = valor;
-  } //verificar se precisa mesmo
+  }
 
   indicaFimDeJogo() {
     this.#fim = true;
@@ -308,7 +308,7 @@ export class Engine {
               console.log("Feito!");
             } else {
               console.log("Não é possível interagir com " + tokens[1]);
-            } //verificar esse trecho
+            }
           }
           break;
 
