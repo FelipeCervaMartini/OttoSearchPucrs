@@ -161,7 +161,7 @@ export class JogoOtto extends Engine {
     sotao.portas.set(hallSuperior.nome, hallSuperior);
 
     // Define a sala inicial (Otto começa no jardim, na frente da casa)
-    this.salaCorrente = jardim;
+    this.salaCorrente = cozinha;
     this.todasAsSalas = [
       jardim,
       hallInferior,
@@ -194,15 +194,6 @@ export class JogoOtto extends Engine {
       switch (tokens[0].toLowerCase()) {
         case "fim":
           this.fim = true;
-          break;
-
-        case "pega":
-          if (this.salaCorrente.pega(tokens[1])) {
-            console.log("Ok! " + tokens[1] + " guardado!");
-            this.avancaTempo(10); // Pegar item leva 10 minutos
-          } else {
-            console.log("Objeto " + tokens[1] + " não encontrado.");
-          }
           break;
 
         case "inventario":
@@ -298,16 +289,9 @@ export class JogoOtto extends Engine {
           }
           break;
         case "pega":
-          const ferramenta = this.salaCorrente.pega(tokens[1]);
-          if (ferramenta) {
-            if (this.mochila.guarda(ferramenta)) {
-              console.log("Ok! " + tokens[1] + " guardado!");
-              this.avancaTempo(10);
-            } else {
-              console.log(
-                "Não foi possível guardar " + tokens[1] + ", mochila cheia!"
-              );
-            }
+          if (this.salaCorrente.pega(tokens[1])) {
+            console.log("Ok! " + tokens[1] + " guardado!");
+            this.avancaTempo(10);
           } else {
             console.log("Objeto " + tokens[1] + " não encontrado.");
           }

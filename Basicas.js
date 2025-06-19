@@ -39,6 +39,7 @@ export class Mochila {
       return false; // não guardou
     }
     this.#ferramentas.push(ferramenta);
+    return true;
   }
 
   pega(nomeFerramenta) {
@@ -170,9 +171,9 @@ export class Sala {
     if (ferramenta != null) {
       this.#engine.mochila.guarda(ferramenta);
       this.#ferramentas.delete(nomeFerramenta);
-      return true;
+      return ferramenta;
     } else {
-      return false;
+      return null;
     }
   }
 
