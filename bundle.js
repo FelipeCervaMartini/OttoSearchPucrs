@@ -936,6 +936,7 @@ var Mochila = class {
       return false;
     }
     this.#ferramentas.push(ferramenta);
+    return true;
   }
   pega(nomeFerramenta) {
     (0, import_bycontract.validate)(arguments, ["String"]);
@@ -1042,9 +1043,9 @@ var Sala = class {
     if (ferramenta != null) {
       this.#engine.mochila.guarda(ferramenta);
       this.#ferramentas.delete(nomeFerramenta);
-      return true;
+      return ferramenta;
     } else {
-      return false;
+      return null;
     }
   }
   sai(porta) {
@@ -1097,7 +1098,6 @@ var Engine = class {
     (0, import_bycontract.validate)(valor, "Boolean");
     this.#fim = valor;
   }
-  //verificar se precisa mesmo
   indicaFimDeJogo() {
     this.#fim = true;
   }
@@ -1185,10 +1185,12 @@ var ControleRemoto = class extends Ferramenta {
     this.#pilhas = false;
     this.#usos = 0;
   }
+  // Adiciona pilhas e define 3 usos
   colocarPilhas() {
     this.#pilhas = true;
     this.#usos = 3;
   }
+  // Usa o controle - reduz usos disponíveis
   usar() {
     if (!this.#pilhas || this.#usos <= 0) {
       return false;
@@ -1196,9 +1198,11 @@ var ControleRemoto = class extends Ferramenta {
     this.#usos--;
     return true;
   }
+  // Getter para verificar se tem pilhas
   get temPilhas() {
     return this.#pilhas;
   }
+  // Getter para verificar usos restantes
   get usosRestantes() {
     return this.#usos;
   }
@@ -1214,6 +1218,7 @@ var PeDeCabra = class extends Ferramenta {
     super("pe_de_cabra");
     this.#usado = false;
   }
+  // Pode ser usado apenas uma vez
   usar() {
     if (this.#usado) {
       return false;
@@ -1228,6 +1233,7 @@ var Relogio = class extends Ferramenta {
     super("relogio");
     this.#engine = engine;
   }
+  // Método para ver as horas atuais
   verHoras() {
     return this.#engine.horaAtual;
   }
@@ -1248,6 +1254,7 @@ var PedacoTerra = class extends Objeto {
       "Buraco cavado na terra. Voc\xEA encontrou uma chave do piso secreto!"
     );
   }
+  // Só pode ser usado com pá
   usar(ferramenta) {
     (0, import_bycontract2.validate)(ferramenta, Ferramenta);
     if (ferramenta instanceof Pa) {
@@ -1265,6 +1272,7 @@ var CarroGaragem = class extends Objeto {
       "Carro com vidro quebrado. Estava vazio."
     );
   }
+  // Vidro pode ser quebrado com pá
   usar(ferramenta) {
     (0, import_bycontract2.validate)(ferramenta, Ferramenta);
     if (ferramenta instanceof Pa) {
@@ -1282,6 +1290,7 @@ var PortaSalaEstar = class extends Objeto {
       "Porta da sala de estar est\xE1 aberta"
     );
   }
+  // Precisa da chave da casa para abrir
   usar(ferramenta) {
     (0, import_bycontract2.validate)(ferramenta, Ferramenta);
     if (ferramenta instanceof ChaveCasa) {
@@ -1299,6 +1308,7 @@ var GavetaCozinha = class extends Objeto {
       "Gaveta aberta. Voc\xEA encontrou pilhas e um controle remoto!"
     );
   }
+  // Abre sem ferramenta
   usar() {
     this.acaoOk = true;
     return true;
@@ -1312,6 +1322,7 @@ var ArmarioVidro = class extends Objeto {
       "Arm\xE1rio de vidro aberto. H\xE1 uma chave da casa dentro!"
     );
   }
+  // Abre sem ferramenta
   usar() {
     this.acaoOk = true;
     return true;
@@ -1322,9 +1333,10 @@ var LivrosBiblioteca = class extends Objeto {
     super(
       "livros",
       "Livros empoeirados na estante",
-      "Nos livros h\xE1 anota\xE7\xF5es: 'A chave est\xE1 enterrada no jardim, pr\xF3ximo \xE0 roseira murcha'"
+      "Nos livros h\xE1 anota\xE7\xF5es: 'A chave est\xE1 enterrada no jardim'"
     );
   }
+  // Lê sem ferramenta - revela localização da chave
   usar() {
     this.acaoOk = true;
     return true;
@@ -1338,6 +1350,7 @@ var ArmarioSalaJantar = class extends Objeto {
       "Arm\xE1rio vazio, nada de \xFAtil aqui"
     );
   }
+  // Precisa da chave da casa
   usar(ferramenta) {
     (0, import_bycontract2.validate)(ferramenta, Ferramenta);
     if (ferramenta instanceof ChaveCasa) {
@@ -1355,6 +1368,7 @@ var ArmarioQuarto = class extends Objeto {
       "Arm\xE1rio aberto. H\xE1 um rel\xF3gio antigo dentro!"
     );
   }
+  // Precisa da chave da casa
   usar(ferramenta) {
     (0, import_bycontract2.validate)(ferramenta, Ferramenta);
     if (ferramenta instanceof ChaveCasa) {
@@ -1372,6 +1386,7 @@ var Cachorro = class extends Objeto {
       "O cachorro correu quando o port\xE3o se abriu"
     );
   }
+  // Interação direta causa derrota
   usar() {
     return "DERROTA_CACHORRO";
   }
@@ -1386,6 +1401,7 @@ var Espelho = class extends Objeto {
     );
     this.#engine = engine;
   }
+  // Mostra estado de cansaço baseado no nível
   usar() {
     const c = this.#engine.nivelCansaco;
     if (c < 20) {
@@ -1393,9 +1409,13 @@ var Espelho = class extends Objeto {
     } else if (c < 50) {
       console.log("Otto est\xE1 um pouco cansado mas ainda determinado.");
     } else if (c < 80) {
-      console.log("Otto est\xE1 visivelmente cansado, com olheiras.");
+      console.log(
+        "Otto est\xE1 visivelmente cansado, com olheiras marcantes e express\xE3o pesada."
+      );
     } else {
-      console.log("Otto est\xE1 exausto, quase no limite.");
+      console.log(
+        "Otto est\xE1 exausto, quase no limite, mal se reconhecendo no espelho. "
+      );
     }
     return true;
   }
@@ -1408,6 +1428,7 @@ var PortaSotao = class extends Objeto {
       "Porta do s\xF3t\xE3o aberta. Voc\xEA encontrou evid\xEAncias de Jerry!"
     );
   }
+  // Precisa da chave do piso secreto - condição de vitória
   usar(ferramenta) {
     (0, import_bycontract2.validate)(ferramenta, Ferramenta);
     if (ferramenta instanceof ChavePisoSecreto) {
@@ -1425,6 +1446,7 @@ var PortaBiblioteca = class extends Objeto {
       "Porta da biblioteca for\xE7ada e aberta"
     );
   }
+  // Precisa de pé de cabra para forçar
   usar(ferramenta) {
     (0, import_bycontract2.validate)(ferramenta, Ferramenta);
     if (ferramenta instanceof PeDeCabra && ferramenta.usar()) {
@@ -1442,6 +1464,7 @@ var PortaoFundos = class extends Objeto {
       "Port\xE3o dos fundos aberto"
     );
   }
+  // Precisa do controle remoto funcionando
   usar(ferramenta) {
     (0, import_bycontract2.validate)(ferramenta, Ferramenta);
     if (ferramenta instanceof ControleRemoto && ferramenta.usar()) {
@@ -1459,6 +1482,7 @@ var PortaoGaragem = class extends Objeto {
       "Port\xE3o da garagem aberto"
     );
   }
+  // Precisa do controle remoto funcionando
   usar(ferramenta) {
     (0, import_bycontract2.validate)(ferramenta, Ferramenta);
     if (ferramenta instanceof ControleRemoto && ferramenta.usar()) {
@@ -1476,6 +1500,7 @@ var Jardim = class extends Sala {
     super("Jardim", engine);
     this.objetos.set("portao_garagem", new PortaoGaragem());
   }
+  // Gerencia uso de ferramentas nos objetos do jardim
   usa(nomeFerramenta, nomeObjeto) {
     (0, import_bycontract3.validate)(arguments, ["String", "String"]);
     if (nomeObjeto === "pedaco_terra") {
@@ -1484,14 +1509,18 @@ var Jardim = class extends Sala {
       if (ferramenta && objeto && objeto.usar(ferramenta)) {
         if (!objeto.acaoOk) return false;
         this.ferramentas.set("chave_piso_secreto", new ChavePisoSecreto());
-        console.log("Voc\xEA encontrou a chave do piso secreto!");
+        console.log(
+          "Otto cavava com cuidado, quase em sil\xEAncio, exatamente no lugar indicado nos livros que encontrara na biblioteca. Segundo aqueles registros, Jerry havia escondido ali algo importante, longe dos olhos de qualquer curioso. A p\xE1 bateu em algo met\xE1lico pouco abaixo da superf\xEDcie. Ele afastou a terra com as m\xE3os e revelou uma pequena caixa de metal, ainda intacta, sem sinais de corros\xE3o. A fechadura estava em uso recente, mas cedeu facilmente ao seu toque. Dentro, envolta em um pano grosso e \xFAmido, repousava uma chave grande, de dentes largos e desenho antigo, claramente usada com frequ\xEAncia. Otto reconheceu imediatamente. Era a chave do piso secreto. A chave que abria o acesso ao compartimento oculto da casa \u2014 o verdadeiro motivo daquela investiga\xE7\xE3o. O rel\xF3gio n\xE3o parava. O tempo era curto. O objetivo estava pr\xF3ximo."
+        );
         return true;
       }
     } else if (nomeObjeto === "portao_garagem") {
       let ferramenta = this.engine.mochila.pega(nomeFerramenta);
       let objeto = this.objetos.get("portao_garagem");
       if (ferramenta && objeto && objeto.usar(ferramenta)) {
-        console.log("Port\xE3o da garagem aberto!");
+        console.log(
+          "O port\xE3o da garagem rangeu ao deslizar lentamente, abrindo-se com o clique do controle remoto. O sil\xEAncio do lugar parecia ainda mais pesado agora."
+        );
         return true;
       }
     }
@@ -1518,7 +1547,9 @@ var Garagem = class extends Sala {
       let ferramenta = this.engine.mochila.pega(nomeFerramenta);
       let objeto = this.objetos.get("carro");
       if (ferramenta && objeto && objeto.usar(ferramenta)) {
-        console.log("Voc\xEA quebrou o vidro do carro, mas ele estava vazio.");
+        console.log(
+          "Com um golpe firme, Otto quebrou o vidro do carro com a p\xE1. O estalo do vidro se espalhou pelo sil\xEAncio pesado do jardim. Ele olhou para dentro, esperando encontrar algo \u2014 alguma pista, um objeto esquecido, uma prova escondida. Mas o interior estava vazio, tomado por lixo velho e tralhas acumuladas ao longo do tempo. O carro n\xE3o parecia ter sido usado h\xE1 muito tempo; o banco estava rasgado, os pain\xE9is empoeirados e o cheiro de mofo impregnava o ar. N\xE3o havia nada ali que pudesse ajud\xE1-lo, s\xF3 o eco do abandono e do descaso."
+        );
         return true;
       }
     }
@@ -1545,7 +1576,9 @@ var HallInferior = class extends Sala {
       const ferramenta = this.engine.mochila.pega(nomeFerramenta);
       const objeto = this.objetos.get("porta_sala_estar");
       if (ferramenta && objeto && objeto.usar(ferramenta)) {
-        console.log("Voc\xEA destrancou a porta da sala de estar!");
+        console.log(
+          "Otto girou a chave com cuidado e destrancou a porta da sala de estar. O rangido da madeira velha se espalhou pelo sil\xEAncio da casa, mostrando a imensid\xE3o do local"
+        );
         return true;
       }
     }
@@ -1566,7 +1599,9 @@ var Cozinha = class extends Sala {
         let controle = new ControleRemoto();
         controle.colocarPilhas();
         this.ferramentas.set("controle_remoto", controle);
-        console.log("Voc\xEA encontrou um controle remoto com pilhas!");
+        console.log(
+          "Otto abriu a gaveta da cozinha e encontrou o controle remoto, com as pilhas j\xE1 colocadas. Era a pe\xE7a que faltava para controlar o port\xE3o da garagem."
+        );
         return true;
       }
     }
@@ -1584,7 +1619,9 @@ var Banheiro = class extends Sala {
     const objeto = this.objetos.get(nomeObjeto);
     if (!nomeFerramenta && objeto && objeto.usar()) {
       this.ferramentas.set("chave_casa", new ChaveCasa());
-      console.log("Voc\xEA encontrou a chave da casa!");
+      console.log(
+        "Otto abriu o arm\xE1rio do banheiro e encontrou uma chave simples. A fechadura parecia comum, como as usadas nas portas da casa, poderia ser \xFAtil."
+      );
       return true;
     }
     return false;
@@ -1601,7 +1638,9 @@ var SalaEstar = class extends Sala {
       let ferramenta = this.engine.mochila.pega(nomeFerramenta);
       let objeto = this.objetos.get("porta_sala_estar");
       if (ferramenta && objeto && objeto.usar(ferramenta)) {
-        console.log("Porta da sala de estar destrancada!");
+        console.log(
+          "Otto girou a chave com cuidado e destrancou a porta da sala de estar. O rangido da madeira velha se espalhou pelo sil\xEAncio da casa, mostrando a imensid\xE3o do local"
+        );
         return true;
       }
     }
@@ -1621,20 +1660,26 @@ var SalaJantar = class extends Sala {
       let ferramenta = this.engine.mochila.pega(nomeFerramenta);
       let objeto = this.objetos.get("armario_sala_jantar");
       if (ferramenta && objeto && objeto.usar(ferramenta)) {
-        console.log("Arm\xE1rio vazio, nada \xFAtil aqui.");
+        console.log(
+          "Otto abriu o arm\xE1rio da sala de jantar com cuidado. L\xE1 dentro, s\xF3 encontrou pratos, copos e alguns talheres \u2014 nada que pudesse ajudar na investiga\xE7\xE3o."
+        );
         return true;
       }
     } else if (nomeObjeto === "portao_fundos") {
       const ferramenta = this.engine.mochila.pega(nomeFerramenta);
       const objeto = this.objetos.get("portao_fundos");
       if (ferramenta && objeto && objeto.usar(ferramenta)) {
-        console.log("Voc\xEA abriu o port\xE3o dos fundos!");
+        console.log(
+          "Otto apontou o controle remoto para o port\xE3o do p\xE1tio dos fundos. Com um clique suave, o port\xE3o se abriu lentamente, rangendo contra o sil\xEAncio do lugar."
+        );
         const salaFundos = this.engine.todasAsSalas.find(
           (s) => s.nome === "Fundos"
         );
         if (salaFundos && salaFundos.objetos.has("cachorro")) {
           salaFundos.objetos.delete("cachorro");
-          console.log("O cachorro correu para fora ao ver o port\xE3o aberto!");
+          console.log(
+            "O cachorro, que dormia tranquilamente ao lado, despertou com o som do port\xE3o rangendo. Levantou-se r\xE1pido e saiu correndo pelo p\xE1tio, desaparecendo na escurid\xE3o da floresta."
+          );
         }
         return true;
       }
@@ -1656,7 +1701,9 @@ var Fundos = class extends Sala {
       if (objeto) {
         let resultado = objeto.usar();
         if (resultado === "DERROTA_CACHORRO") {
-          console.log("O cachorro te atacou! Voc\xEA foi ferido gravemente...");
+          console.log(
+            "O cachorro dormia quieto ao lado, mas quando Otto tentou se aproximar, o animal despertou abruptamente e atacou sem aviso. Otto foi ferido gravemente antes de conseguir recuar."
+          );
           this.engine.indicaDerrota("cachorro");
           return true;
         }
@@ -1685,7 +1732,9 @@ var HallSuperior = class extends Sala {
       let ferramenta = this.engine.mochila.pega(nomeFerramenta);
       let objeto = this.objetos.get("porta_biblioteca");
       if (ferramenta && objeto && objeto.usar(ferramenta)) {
-        console.log("Porta da biblioteca for\xE7ada!");
+        console.log(
+          "Otto usou o p\xE9 de cabra para arrombar a porta da biblioteca. A madeira cedeu com um estrondo seco, abrindo caminho para o que estava l\xE1 dentro."
+        );
         return true;
       }
     }
@@ -1705,7 +1754,9 @@ var Quarto = class extends Sala {
       let objeto = this.objetos.get("armario_quarto");
       if (ferramenta && objeto && objeto.usar(ferramenta)) {
         this.ferramentas.set("relogio", new Relogio(this.engine));
-        console.log("Voc\xEA encontrou um rel\xF3gio!");
+        console.log(
+          "Otto abriu o arm\xE1rio do quarto e encontrou um velho rel\xF3gio de ponteiros. A pe\xE7a tinha a caixa de metal desgastada pelo tempo, o vidro arranhado e mostrava marcas de uso constante. No verso, uma inscri\xE7\xE3o quase apagada indicava o nome de Jerry."
+        );
         return true;
       }
     }
@@ -1723,7 +1774,9 @@ var Biblioteca = class extends Sala {
     if (nomeObjeto === "livros") {
       let objeto = this.objetos.get("livros");
       if (objeto && objeto.usar()) {
-        console.log("Voc\xEA leu as anota\xE7\xF5es nos livros!");
+        console.log(
+          "Otto passou um tempo lendo os livros antigos, folheando p\xE1ginas amareladas e poeirentas. Entre as anota\xE7\xF5es manuscritas, encontrou pistas sutis que indicavam que a chave do s\xF3t\xE3o estava escondida no p\xE1tio da frente."
+        );
         const salaJardim = this.engine.todasAsSalas.find(
           (s) => s.nome === "Jardim"
         );
@@ -1751,11 +1804,13 @@ var Sotao = class extends Sala {
       if (ferramenta && objeto) {
         let resultado = objeto.usar(ferramenta);
         if (resultado === "VITORIA") {
-          console.log("Voc\xEA encontrou evid\xEAncias conclusivas sobre Jerry!");
           console.log(
-            "Documentos, fotos e planos criminosos est\xE3o espalhados pelo s\xF3t\xE3o."
+            "Otto encontrou provas irrefut\xE1veis ligando Jerry aos crimes. Cada detalhe parecia encaixar perfeitamente, confirmando suas suspeitas e revelando a verdadeira face do criminoso."
           );
-          console.log("Finalmente voc\xEA conseguiu as provas que precisava!");
+          console.log(
+            "Documentos, fotos e planos criminosos estavam espalhados pelo s\xF3t\xE3o, como pe\xE7as de um quebra-cabe\xE7a sombrio que s\xF3 agora come\xE7ava a ser montado."
+          );
+          console.log("Finalmente voc\xEA conseguiu as provas que precisava. ");
           this.engine.indicaVitoria();
           return true;
         }
@@ -1768,12 +1823,16 @@ var Sotao = class extends Sala {
 // Jogo.js
 var JogoOtto = class extends Engine {
   #horaAtual;
+  // Controla o tempo do jogo (10h-19h)
   #nivelCansaco;
+  // Sistema de cansaço (0-100)
   #jogoTerminado;
+  // Flag para encerrar o jogo
   #motivoTermino;
+  // Razão do fim do jogo
   constructor() {
     super();
-    this.#horaAtual = 1;
+    this.#horaAtual = 10;
     this.#nivelCansaco = 0;
     this.#jogoTerminado = false;
     this.#motivoTermino = "";
@@ -1787,10 +1846,12 @@ var JogoOtto = class extends Engine {
   // Método para avançar o tempo quando o jogador faz ações
   avancaTempo(minutos = 15) {
     this.#horaAtual += minutos / 60;
-    this.#nivelCansaco += 2;
+    this.#nivelCansaco += 4;
     if (this.#horaAtual >= 19 && !this.#jogoTerminado) {
       console.log("\n=== GAME OVER ===");
-      console.log("S\xE3o 19 horas! Jerry chegou e te encontrou na casa!");
+      console.log(
+        "S\xE3o 19 horas. A porta range lentamente e Jerry finalmente aparece. O ar fica pesado, o sil\xEAncio \xE9 quebrado por passos firmes. Voc\xEA foi pego."
+      );
       console.log("Voc\xEA n\xE3o conseguiu escapar a tempo...");
       this.#motivoTermino = "tempo";
       this.indicaFimDeJogo();
@@ -1833,7 +1894,7 @@ var JogoOtto = class extends Engine {
   criaCenario() {
     console.log("=== INVESTIGA\xC7\xC3O NA CASA DE JERRY ===");
     console.log(
-      "Otto, o investigador veterano, chegou \xE0 casa suspeita \xE0s 10h da manh\xE3."
+      "Otto, o investigador veterano, chegou \xE0 casa suspeita \xE0s 10 da manh\xE3. A constru\xE7\xE3o antiga parecia esquecida pelo tempo, com a pintura descascada e janelas empoeiradas que mal deixavam passar a luz. O jardim \xE0 frente estava tomado pelo mato alto, e a cerca de madeira rangia sob o leve vento. A porta da frente, meio entreaberta, dava um convite silencioso e amea\xE7ador ao interior escuro. O ar carregado de abandono e segredos pairava ao redor do local, deixando claro que aquela casa guardava mais do que apenas poeira e sil\xEAncio."
     );
     console.log(
       "Objetivo: Encontrar evid\xEAncias contra Jerry antes que ele apare\xE7a \xE0s 19h!"
@@ -1922,10 +1983,10 @@ var JogoOtto = class extends Engine {
           } else if (tokens.length === 2) {
             const nome = tokens[1];
             if (nome === "relogio") {
-              const ferramenta2 = this.mochila.pega("relogio");
-              if (ferramenta2 && ferramenta2.verHoras) {
-                let hora = Math.floor(ferramenta2.verHoras());
-                let minutos = Math.floor((ferramenta2.verHoras() - hora) * 60);
+              const ferramenta = this.mochila.pega("relogio");
+              if (ferramenta && ferramenta.verHoras) {
+                let hora = Math.floor(ferramenta.verHoras());
+                let minutos = Math.floor((ferramenta.verHoras() - hora) * 60);
                 console.log(
                   `S\xE3o ${hora}:${minutos.toString().padStart(2, "0")}h`
                 );
@@ -1981,16 +2042,9 @@ var JogoOtto = class extends Engine {
           }
           break;
         case "pega":
-          const ferramenta = this.salaCorrente.pega(tokens[1]);
-          if (ferramenta) {
-            if (this.mochila.guarda(ferramenta)) {
-              console.log("Ok! " + tokens[1] + " guardado!");
-              this.avancaTempo(10);
-            } else {
-              console.log(
-                "N\xE3o foi poss\xEDvel guardar " + tokens[1] + ", mochila cheia!"
-              );
-            }
+          if (this.salaCorrente.pega(tokens[1])) {
+            console.log("Ok! " + tokens[1] + " guardado!");
+            this.avancaTempo(10);
           } else {
             console.log("Objeto " + tokens[1] + " n\xE3o encontrado.");
           }
@@ -2039,6 +2093,7 @@ var JogoOtto = class extends Engine {
     } else {
       console.log("Otto decidiu encerrar a investiga\xE7\xE3o.");
     }
+    prompt("\nPressione ENTER para sair...");
   }
 };
 

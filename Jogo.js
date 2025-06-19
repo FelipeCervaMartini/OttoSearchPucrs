@@ -352,5 +352,6 @@ export class JogoOtto extends Engine {
     } else {
       console.log("Otto decidiu encerrar a investigação.");
     }
+    prompt("\nPressione ENTER para sair...");
   }
 }

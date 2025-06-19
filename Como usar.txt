@@ -1,0 +1,7 @@
+Dê dois cliques no arquivo JogoOtto.exe
+
+O jogo abrirá em uma janela de terminal.
+
+Digite os comandos na tela para jogar (ex: pega pa, usa chave porta, etc.).
+
+Ao terminar o jogo, pressione ENTER para fechar a janela após ler a mensagem final.
