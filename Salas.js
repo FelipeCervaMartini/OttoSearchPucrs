@@ -32,7 +32,7 @@ export class Jardim extends Sala {
   constructor(engine) {
     validate(engine, Engine);
     super("Jardim", engine);
-    this.objetos.set("pedaco_terra", new PedacoTerra());
+
     this.objetos.set("portao_garagem", new PortaoGaragem());
   }
 
@@ -331,6 +331,15 @@ export class Biblioteca extends Sala {
       let objeto = this.objetos.get("livros");
       if (objeto && objeto.usar()) {
         console.log("Você leu as anotações nos livros!");
+
+        const salaJardim = this.engine.todasAsSalas.find(
+          (s) => s.nome === "Jardim"
+        );
+        if (salaJardim && !salaJardim.objetos.has("pedaco_terra")) {
+          salaJardim.objetos.set("pedaco_terra", new PedacoTerra());
+          console.log("Você percebe algo diferente no jardim agora...");
+        }
+
         return true;
       }
     }

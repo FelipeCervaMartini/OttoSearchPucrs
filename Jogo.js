@@ -161,7 +161,7 @@ export class JogoOtto extends Engine {
     sotao.portas.set(hallSuperior.nome, hallSuperior);
 
     // Define a sala inicial (Otto começa no jardim, na frente da casa)
-    this.salaCorrente = cozinha;
+    this.salaCorrente = jardim;
     this.todasAsSalas = [
       jardim,
       hallInferior,
